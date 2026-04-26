@@ -1,27 +1,15 @@
-use::std::thread;
-use std::{primitive, sync::mpsc};
-
 fn main() {
-    let (tx, rx) = mpsc::channel();
+    let k = 8;
+    let v = vec![1, 2, 8, 9, 3];    
+    let result = find_k(v, k);
+    println!("{}", result);
+}
 
-    for i in 0..4 {
-        let producer = tx.clone();
-        thread::spawn(move || {
-            let mut ans: u64 = 0;
-            for j in 0..1000000 {
-                ans = ans + (i * 1000000 + j);
-            }
-            producer.send(ans).unwrap();
-        });
+pub fn find_k(v: Vec<i32>, k: i32) -> usize {
+    for i in 0..v.len() {
+        if v[i] == k {
+            return i
+        }
     }
-
-    drop(tx);
-
-    let mut ans: u64 = 0;
-    for val in rx {
-        ans = ans + val;
-        println!("Found Value!");
-    }
-
-    println!("Answer is {}", ans);
+    0
 }
